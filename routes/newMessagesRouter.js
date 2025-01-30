@@ -1,20 +1,15 @@
 const { Router } = require('express');
+const db = require('../db/queries');
 
 const newMessagesRouter = Router();
-const messages = require('./indexRouter').messages;
 
 newMessagesRouter.get('/', (req, res) => {
   res.render('form', { title: 'New Message' });
 });
 
-newMessagesRouter.post('/', (req, res) => {
+newMessagesRouter.post('/', async (req, res) => {
   const { user, text } = req.body;
-  const message = {
-    user,
-    text,
-    added: new Date(),
-  };
-  messages.push(message);
+  await db.addMessage(text, user);
   res.redirect('/');
 });
 
